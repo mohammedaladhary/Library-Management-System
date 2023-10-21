@@ -1,9 +1,6 @@
 package com.sda.ironhack.LibraryManagementSystem.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +14,11 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 public class Book {
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // You can use a database-generated ID
