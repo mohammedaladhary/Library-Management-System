@@ -13,6 +13,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -57,7 +59,6 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 			// Read user choice
 			int choice = getUserChoice();
 
-
 			switch (choice) {
 				case 1:
 					handleAddBookAndAuthor();
@@ -82,7 +83,7 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 					break;
 				case 0:
 					System.out.println("Exiting the application.");
-					return;
+					System.exit(0);
 				default:
 					System.out.println("Invalid choice. Please select a valid option.");
 			}
@@ -133,12 +134,18 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 		if (books.isEmpty()) {
 			System.out.println("No books found with the given title.");
 		} else {
-			System.out.println("Books with the title '" + title + "':");
+			System.out.println("\nBooks with the title '" + title + "':");
+			System.out.println("----------------------------------------------------------------------------------------");
+			System.out.printf("%-20s %-20s %-15s %-15s%n", "Book ISBN", "Book Title", "Category", "No of Books");
+			System.out.println("----------------------------------------------------------------------------------------");
 			for (Book book : books) {
-				System.out.println(book.toString());
+				System.out.printf("%-20s %-20s %-15s %-15s%n", book.getIsbn(), book.getTitle(), book.getCategory(), book.getQuantity());
 			}
+			System.out.println("----------------------------------------------------------------------------------------");
 		}
 	}
+
+
 
 	private void handleSearchBookByCategory() {
 		Scanner scanner = new Scanner(System.in);
@@ -151,12 +158,17 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 		if (books.isEmpty()) {
 			System.out.println("No books found in the given category.");
 		} else {
-			System.out.println("Books in the category '" + category + "':");
+			System.out.println("\nBooks in the category '" + category + "':");
+			System.out.println("----------------------------------------------------------------------------------------");
+			System.out.printf("%-20s %-20s %-15s %-15s%n", "Book ISBN", "Book Title", "Category", "No of Books");
+			System.out.println("----------------------------------------------------------------------------------------");
 			for (Book book : books) {
-				System.out.println(book.toString());
+				System.out.printf("%-20s %-20s %-15s %-15s%n", book.getIsbn(), book.getTitle(), book.getCategory(), book.getQuantity());
 			}
+			System.out.println("----------------------------------------------------------------------------------------");
 		}
 	}
+
 
 	private void handleSearchBookByAuthor() {
 		Scanner scanner = new Scanner(System.in);
@@ -169,12 +181,18 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 		if (authors.isEmpty()) {
 			System.out.println("No books found by the given author.");
 		} else {
-			System.out.println("Books by author '" + authorName + "':");
+			System.out.println("\nBooks by author '" + authorName + "':");
+			System.out.println("----------------------------------------------------------------------------------------");
+			System.out.printf("%-20s %-20s %-15s %-15s%n", "Book ISBN", "Book Title", "Category", "No of Books");
+			System.out.println("----------------------------------------------------------------------------------------");
 			for (Author author : authors) {
-				System.out.println(author.getAuthorBook().toString());
+				Book book = author.getAuthorBook();
+				System.out.printf("%-20s %-20s %-15s %-15s%n", book.getIsbn(), book.getTitle(), book.getCategory(), book.getQuantity());
 			}
+			System.out.println("----------------------------------------------------------------------------------------");
 		}
 	}
+
 
 	private void handleListAllBooks() {
 		// Retrieve all books along with their authors
@@ -184,14 +202,13 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 			System.out.println("No books found in the library.");
 		} else {
 			System.out.println("List of all books along with their authors:");
+			System.out.printf("%-20s %-20s %-15s %-15s %-20s %-30s%n", "Book ISBN", "Book Title", "Category", "No of Books", "Author name", "Author mail");
 			for (Book book : books) {
 				Author author = book.getAuthor();
-				System.out.println("Book: " + book.getTitle());
-				System.out.println("Author: " + author.getAuthorName());
-				System.out.println("ISBN: " + book.getIsbn());
-				System.out.println("Category: " + book.getCategory());
-				System.out.println("Quantity: " + book.getQuantity());
-				System.out.println();
+				System.out.printf("%-20s %-20s %-15s %-15s %-20s %-30s%n",
+						book.getIsbn(), book.getTitle(), book.getCategory(), book.getQuantity(),
+						author != null ? author.getAuthorName() : "N/A",
+						author != null ? author.getAuthorEmail() : "N/A");
 			}
 		}
 	}
@@ -230,7 +247,18 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 		bookRepository.save(book);
 		issueRepository.save(issue);
 
-		System.out.println("Book issued successfully to " + student.getStudentName());
+		// 5. Generate a return date
+		Date returnDate = generateReturnDate();
+
+		System.out.println("Book issued. Return date: " + returnDate);
+	}
+
+	private Date generateReturnDate() {
+		// Implement logic to calculate the return date (e.g., add a fixed duration to the current date)
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_MONTH, 30); // For example, 30 days loan period
+
+		return calendar.getTime();
 	}
 
 	private void handleListBooksByUsn() {

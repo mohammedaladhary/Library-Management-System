@@ -11,4 +11,6 @@ import java.util.List;
 public interface IssueRepository extends JpaRepository<Issue, Long> {
     // Define custom query methods if necessary
     List<Issue> findByIssueStudent(Student student);
+
+    List<Issue> findByIssueStudentUsn(String usn);
 }
