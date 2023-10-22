@@ -13,6 +13,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -240,7 +241,6 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 		System.out.println("Student added successfully.");
 	}
 
-
 	private void handleIssueBookToStudent() {
 		Scanner scanner = new Scanner(System.in);
 
@@ -270,16 +270,60 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 		issue.setIssueStudent(student);
 		issue.setIssueBook(book);
 
+		// Set issue date and return date
+		LocalDate issueDate = LocalDate.now();
+		LocalDate returnDate = issueDate.plusDays(30); // You can change the return date calculation as needed
+
+		issue.setIssueDate(String.valueOf(issueDate));
+		issue.setReturnDate(String.valueOf(returnDate));
+
 		// 4. Update the book quantity and save the Issue record to the database.
 		book.setQuantity(book.getQuantity() - 1);
 		bookRepository.save(book);
 		issueRepository.save(issue);
 
-		// 5. Generate a return date
-		Date returnDate = generateReturnDate();
-
-		System.out.println("Book issued. Return date: " + returnDate);
+		System.out.println("Book issued successfully to " + student.getStudentName() + ". Return date: " + returnDate);
 	}
+
+//	private void handleIssueBookToStudent() {
+//		Scanner scanner = new Scanner(System.in);
+//
+//		System.out.print("Enter the student's USN: ");
+//		String usn = scanner.next();
+//		System.out.print("Enter the book's ISBN: ");
+//		String isbn = scanner.next();
+//
+//		// Implement the logic to issue the book to the student
+//		// 1. Check if the student (by USN) and book (by ISBN) exist in the database.
+//		Student student = studentRepository.findByUsn(usn);
+//		Book book = bookRepository.findByIsbn(isbn);
+//
+//		if (student == null || book == null) {
+//			System.out.println("Student or book not found. Please check the USN and ISBN.");
+//			return;
+//		}
+//
+//		// 2. Check if the book is available (quantity > 0).
+//		if (book.getQuantity() <= 0) {
+//			System.out.println("Book is not available for issue.");
+//			return;
+//		}
+//
+//		// 3. Create an Issue record to track the book issuance.
+//		Issue issue = new Issue();
+//		issue.setIssueStudent(student);
+//		issue.setIssueBook(book);
+//
+//		// 4. Update the book quantity and save the Issue record to the database.
+//		book.setQuantity(book.getQuantity() - 1);
+//		bookRepository.save(book);
+//		issueRepository.save(issue);
+//
+//		// 5. Generate a return date
+//		Date returnDate = generateReturnDate();
+//
+//		System.out.println("Book issued. Return date: " + returnDate);
+//	}
 
 	private Date generateReturnDate() {
 		// Implement logic to calculate the return date (e.g., add a fixed duration to the current date)

@@ -3,6 +3,7 @@ package com.sda.ironhack.LibraryManagementSystem.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Setter
@@ -17,6 +18,9 @@ public class Author {
 
     private String authorName;
     private String authorEmail;
+
+    @OneToMany(mappedBy = "author")
+    private List<Book> books;
 
     @OneToOne
     private Book authorBook;
