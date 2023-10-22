@@ -2,6 +2,7 @@ package com.sda.ironhack.LibraryManagementSystem.Entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,10 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 public class Student {
+
+    @OneToOne(mappedBy = "issueStudent")
+    private Issue issue;
+
     @Id
     private String usn;
 

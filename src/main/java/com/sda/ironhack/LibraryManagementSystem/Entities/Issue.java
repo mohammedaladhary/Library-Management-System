@@ -22,9 +22,11 @@ public class Issue {
     private String returnDate;
 
     @OneToOne
+    @JoinColumn(name = "student_id")
     private Student issueStudent;
 
     @OneToOne
+    @JoinColumn(name = "book_id")
     private Book issueBook;
 
     @Override

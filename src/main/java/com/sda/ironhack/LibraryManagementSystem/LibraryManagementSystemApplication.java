@@ -46,7 +46,7 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 
 		// Implement a menu to call various library services
 		while (true) {
-			System.out.println("Select from 1 - 7 or 0 to exit: ");
+			System.out.println("\nSelect from 1 - 7 or 0 to exit: ");
 			System.out.println("\n1. Add a Book and Author");
 			System.out.println("2. Search book by title");
 			System.out.println("3. Search book by category");
@@ -54,6 +54,7 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 			System.out.println("5. List all books along with author");
 			System.out.println("6. Issue book to student");
 			System.out.println("7. List books by usn");
+			System.out.println("8. Add Student");
 			System.out.println("0. Exit");
 
 			// Read user choice
@@ -80,6 +81,9 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 					break;
 				case 7:
 					handleListBooksByUsn();
+					break;
+				case 8:
+					addStudent();
 					break;
 				case 0:
 					System.out.println("Exiting the application.");
@@ -201,8 +205,10 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 		if (books.isEmpty()) {
 			System.out.println("No books found in the library.");
 		} else {
-			System.out.println("List of all books along with their authors:");
-			System.out.printf("%-20s %-20s %-15s %-15s %-20s %-30s%n", "Book ISBN", "Book Title", "Category", "No of Books", "Author name", "Author mail");
+			System.out.println("\nList of all books along with their authors:");
+			System.out.println("----------------------------------------------------------------------------------------------------------");
+			System.out.printf("%-20s %-20s %-15s %-15s %-20s %-30s%n", "Book ISBN", "Book Title", "Category", "No of Books", "Author name", "Author email");
+			System.out.println("----------------------------------------------------------------------------------------------------------");
 			for (Book book : books) {
 				Author author = book.getAuthor();
 				System.out.printf("%-20s %-20s %-15s %-15s %-20s %-30s%n",
@@ -212,6 +218,28 @@ public class LibraryManagementSystemApplication implements CommandLineRunner {
 			}
 		}
 	}
+
+	public void addStudent() {
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.print("Enter the student's USN: ");
+		String usn = scanner.next();
+
+		// Consume the newline character
+		scanner.nextLine();
+
+		System.out.print("Enter the student's name: ");
+		String name = scanner.nextLine();
+
+		Student student = new Student();
+		student.setUsn(usn);
+		student.setStudentName(name);
+
+		studentRepository.save(student);
+
+		System.out.println("Student added successfully.");
+	}
+
 
 	private void handleIssueBookToStudent() {
 		Scanner scanner = new Scanner(System.in);
